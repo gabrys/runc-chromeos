@@ -1,0 +1,27 @@
+#!/usr/bin/env python3
+
+import os
+import sys
+import subprocess
+
+IPTABLES = "/usr/sbin/iptables-legacy"
+
+
+args = sys.argv[1:]
+if "--destination-ports" not in sys.argv:
+    os.execv(IPTABLES, ["iptables"] + args)
+
+args = "@@@".join(args)
+args = args.replace("@@@-m@@@multiport@@@", "@@@")
+args = args.replace("@@@--destination-ports@@@", "@@@--destination-ports=")
+args = args.split("@@@")
+
+
+for i, arg in enumerate(args):
+    if arg.startswith("--destination-ports="):
+        dports = arg.split("=")[1].split(",")
+        dport_arg = i
+
+for dport in dports:
+    new_args = args[:dport_arg] + ["--dport", dport] + args[dport_arg+1:]
+    subprocess.run([IPTABLES] + new_args, check=True)
