@@ -1,0 +1,49 @@
+{
+   "cniVersion": "0.4.0",
+   "name": "runc_chromeos",
+   "plugins": [
+      {
+         "type": "bridge",
+         "bridge": "cni-podman1",
+         "isGateway": true,
+         "ipMasq": true,
+         "hairpinMode": true,
+         "ipam": {
+            "type": "host-local",
+            "routes": [
+               {
+                  "dst": "0.0.0.0/0"
+               }
+            ],
+            "ranges": [
+               [
+                  {
+                     "subnet": "10.88.1.0/24",
+                     "gateway": "10.88.1.1"
+                  }
+               ]
+            ]
+         }
+      },
+      {
+         "type": "portmap",
+         "capabilities": {
+            "portMappings": true
+         }
+      },
+      {
+         "type": "firewall",
+         "backend": "iptables"
+      },
+      {
+         "type": "tuning"
+      },
+      {
+         "type": "dnsname",
+         "domainName": "dns.podman",
+         "capabilities": {
+            "aliases": true
+         }
+      }
+   ]
+}
