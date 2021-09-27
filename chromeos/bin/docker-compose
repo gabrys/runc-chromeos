@@ -1,0 +1,13 @@
+#!/bin/bash
+
+DC_PATH=/usr/local/bin/docker-compose.real
+DC_VERSION=1.29.2
+
+if ! [ -x "$DC_PATH" ]; then
+  sudo curl -L "https://github.com/docker/compose/releases/download/$DC_VERSION/docker-compose-$(uname -s)-$(uname -m)" -o "$DC_PATH"
+  sudo chmod u+s,a+x "$DC_PATH"
+fi
+
+nohup sudo podman system service --time 0 unix:///var/run/docker.sock 1>/dev/null 2>/dev/null &
+
+exec "$DC_PATH" "$@"
