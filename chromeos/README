@@ -1,0 +1,28 @@
+#!/bin/bash
+
+set -euxo pipefail
+
+GHDL=https://github.com/gabrys/runc-chromeos/raw/chromeos/chromeos/
+
+sed 's/^\(%sudo.* \)ALL$/\1 NOPASSWD:ALL/' /etc/sudoers -i
+apt install -y bash-completion curl dnsmasq iptables podman python3
+update-alternatives --set iptables /usr/sbin/iptables-legacy
+
+mkdir -p /usr/libexec/cni
+ln -sf /usr/lib/dnsname /usr/libexec/cni/
+
+(
+ cd /usr/local/bin
+  curl -fLO $GHDL/bin/docker
+  curl -fLO $GHDL/bin/docker-compose
+  curl -fLO $GHDL/bin/flush-iptables
+  curl -fLO $GHDL/bin/iptables
+  curl -fLO $GHDL/bin/x86_64/runc
+  chmod +x docker docker-compose flush-iptables iptables runc
+ cd /etc/containers
+  curl -fLO $GHDL/etc/containers/containers.conf
+  curl -fLO $GHDL/etc/containers/storage.conf
+  curl -fLO $GHDL/etc/containers/registries.conf
+ cd /etc/cni/net.d
+  curl -fLO $GHDL/etc/cni/net.d/66-runc_chromeos.conflist
+)
