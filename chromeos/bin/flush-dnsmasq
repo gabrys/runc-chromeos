@@ -1,0 +1,5 @@
+#!/bin/bash
+
+# Clean podman dnsmasq configuration
+find /run/containers/cni/dnsname/*/ -type f -not -path '*/runc_chromeos/*' -not -path '*/podman/*' -exec 'rm' '{}' ';'
+find /run/containers/cni/dnsname/*/ -type d -not -path '*/runc_chromeos/*' -not -path '*/podman/*' -exec 'rmdir' '{}' ';'

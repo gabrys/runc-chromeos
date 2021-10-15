@@ -15,6 +15,7 @@ ln -sf /usr/lib/dnsname /usr/libexec/cni/
  cd /usr/local/bin
   curl -fLO $GHDL/bin/docker
   curl -fLO $GHDL/bin/docker-compose
+  curl -fLO $GHDL/bin/flush-dnsmasq
   curl -fLO $GHDL/bin/flush-iptables
   curl -fLO $GHDL/bin/iptables
   curl -fLO $GHDL/bin/x86_64/runc
